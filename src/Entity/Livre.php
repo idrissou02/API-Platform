@@ -6,9 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivreRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
+ * @ApiResource()
  */
 class Livre
 {
