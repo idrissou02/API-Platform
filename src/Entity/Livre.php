@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivreRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
@@ -16,12 +16,20 @@ class Livre
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"listLivreSimple", "listLivreFull"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"listGenreFull")    
+     * @Groups({"listLivreSimple", "listLivreFull"})
+     * @Assert\NotBlank(message="Le titre ne peut pas être vide.")
+     * @Assert\Length(
+     *     min=2,
+     *     max=255,
+     *     minMessage="Le titre doit faire au moins {{ limit }} caractères",
+     *     maxMessage="Le titre doit faire au plus {{ limit }} caractères"
+     * )
      */
     private $titre;
 
