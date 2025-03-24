@@ -12,7 +12,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=GenreRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={"get"}
+ *      collectionOperations={"get"}
+ *      normalizationContext={
+ *              "groups"={"listGenreSimple","listGenreFull"}}
+ * )
  */
 class Genre
 {
