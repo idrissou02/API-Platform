@@ -11,6 +11,19 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
  * @ApiResource()
+ *      attributes={
+ *          "order"={
+ *              "titre":"ASC"   
+ *              "prix" : "DESC"   
+ *          }
+ * })
+ * @ApiResource(
+ *     SearchFilter::class,
+ *     properties={
+ *         "titre": "ipartial",
+ *         "auteur": "exact", 
+ * }
+ * )
  */
 class Livre
 {

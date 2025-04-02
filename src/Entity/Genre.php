@@ -9,14 +9,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; // Ajout de l'import manquant
 
 /**
  * @ORM\Entity(repositoryClass=GenreRepository::class)
  * @ApiResource(
- *      itemOperations={"get"}
+ *      itemOperations={
+ *          "get_simple"={
+ *              "method"="GET",
+ *              "path"="/genre/{id}/simple",
+ *              "normalization_context"={"groups"={"listGenreSimple"}}
+ *          },
+ *          "get_full"={
+ *              "method"="GET",
+ *              "path"="/genre/{id}/full",
+ *              "normalization_context"={"groups"={"listGenreFull"}}
+ *          }
+ *      },
  *      collectionOperations={"get"}
- *      normalizationContext={
- *              "groups"={"listGenreSimple","listGenreFull"}}
+ * )
+ * @UniqueEntity(
+ *      fields={"libelle"},
+ *      message="Il existe déjà un genre avec ce libellé {{ value }}, veuillez saisir un autre libellé"
  * )
  */
 class Genre
@@ -35,8 +49,8 @@ class Genre
      * @Assert\Length(
      *     min=2,
      *     max=50,
-     *     minMessage="Le libelle doit faire au moins {{ limit }} caractères",
-     *     maxMessage ="Le libelle doit faire au plus {{ limit }} caractères"
+     *     minMessage="Le libellé doit faire au moins {{ limit }} caractères",
+     *     maxMessage="Le libellé doit faire au plus {{ limit }} caractères"
      * )
      */
     private $libelle;
