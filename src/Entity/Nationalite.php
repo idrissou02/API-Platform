@@ -10,7 +10,12 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=NationaliteRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *      attributes={
+ *          "order"={
+ *              "libelle":"ASC"
+ *          }
+ * })
  */
 class Nationalite
 {

@@ -17,16 +17,25 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity; // Ajout de l'im
  *      itemOperations={
  *          "get_simple"={
  *              "method"="GET",
- *              "path"="/genre/{id}/simple",
+ *              "path"="/genres/{id}/simple",
  *              "normalization_context"={"groups"={"listGenreSimple"}}
  *          },
  *          "get_full"={
  *              "method"="GET",
- *              "path"="/genre/{id}/full",
+ *              "path"="/genres/{id}/full",
  *              "normalization_context"={"groups"={"listGenreFull"}}
+ *          },
+ *          "get"={
+ *              "method"="GET",
+ *              "path"="/genres/{id}"
  *          }
  *      },
- *      collectionOperations={"get"}
+ *      collectionOperations={
+ *          "get"={
+ *              "method"="GET",
+ *              "path"="/genres"
+ *          }
+ *      }
  * )
  * @UniqueEntity(
  *      fields={"libelle"},
@@ -55,17 +64,6 @@ class Genre
      */
     private $libelle;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="genre")
-     * @Groups({"listGenreFull"})
-     */
-    private $editeur;
-
-    public function __construct()
-    {
-        $this->editeur = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -79,36 +77,6 @@ class Genre
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Livre>
-     */
-    public function getEditeur(): Collection
-    {
-        return $this->editeur;
-    }
-
-    public function addEditeur(Livre $editeur): self
-    {
-        if (!$this->editeur->contains($editeur)) {
-            $this->editeur[] = $editeur;
-            $editeur->setGenre($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEditeur(Livre $editeur): self
-    {
-        if ($this->editeur->removeElement($editeur)) {
-            // set the owning side to null (unless already changed)
-            if ($editeur->getGenre() === $this) {
-                $editeur->setGenre(null);
-            }
-        }
 
         return $this;
     }

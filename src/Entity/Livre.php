@@ -7,22 +7,32 @@ use App\Repository\LivreRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter; // Import de l'annotation ApiFilter
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter; // Import du filtre SearchFilter
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter; // Import du filtre RangeFilter
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
- * @ApiResource()
+ * @ApiResource(
  *      attributes={
  *          "order"={
- *              "titre":"ASC"   
+ *              "titre":"ASC",   
  *              "prix" : "DESC"   
  *          }
- * })
- * @ApiResource(
+ *      }
+ * )
+ * @ApiFilter(
  *     SearchFilter::class,
  *     properties={
  *         "titre": "ipartial",
- *         "auteur": "exact", 
- * }
+ *         "auteur": "exact"
+ *     }
+ * )
+ * @ApiFilter(
+ *     RangeFilter::class,
+ *     properties={
+ *         "prix"
+ *     }
  * )
  */
 class Livre
@@ -49,20 +59,19 @@ class Livre
     private $titre;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups({"listGenreFull"})  
+     * @ORM\Column(type="float", nullable=true) 
      */
     private $prix;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="editeur")
+     * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
+     * @ORM\JoinColumn(nullable=false) 
      */
     private $genre;
 
     /**
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"listGenreFull"})  
+     * @ORM\JoinColumn(nullable=false) 
      */
     private $editeur;
 
@@ -81,7 +90,6 @@ class Livre
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"listGenreFull"})  
      */
     private $annee;
 
