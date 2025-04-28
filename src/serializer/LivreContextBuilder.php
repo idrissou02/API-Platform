@@ -1,9 +1,9 @@
 <?php
-namespace App\Serializer;
+namespace App\serializer;
 
 use App\ApiResource\Livre;
 use Symfony\Component\HttpFoundation\Request;
-use ApiPlatform\State\SerializerContextBuilderInterface;
+use ApiPlatform\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class LivreContextBuilder implements SerializerContextBuilderInterface
@@ -26,8 +26,8 @@ final class LivreContextBuilder implements SerializerContextBuilderInterface
             $context['groups'][] = 'get_role_manager';
         } 
         if ($resourceClass === Livre::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_ADMIN') && $normalization === false) {
-            if($request->getMethod() === PUT) {
-            $context['groups'][] = 'put_admin';
+            if ($request->getMethod() === Request::METHOD_PUT) {
+                $context['groups'][] = 'put_admin';
             }
         }
         return $context;

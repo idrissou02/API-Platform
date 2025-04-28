@@ -7,13 +7,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivreRepository;
 use ApiPlatform\Core\Annotation\ApiFilter; 
-use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter; 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter; 
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=LivreRepository::class)
@@ -40,8 +40,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "access_control"="is_granted('ROLE_MANAGER')",
  *              "access_control_message"="Vous n'avez pas accès à cette ressource"
  *         }
- *      }
- *     itemOperations={
+ *      },
+ *      itemOperations={
  *          "get"={
  *              "method"="GET",
  *              "path"="/livres/{id}",
@@ -62,7 +62,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "method"="DELETE",
  *              "path"="/livres/{id}",
  *              "access_control"="is_granted('ROLE_ADMIN')",
- *              "access_control_message"="Vous n'avez pas accès à cette ressource",
+ *              "access_control_message"="Vous n'avez pas accès à cette ressource"
  *          }
  *      }
  * )
@@ -120,28 +120,28 @@ class Livre
 
     /**
      * @ORM\Column(type="float", nullable=true) 
-     * @Groups({"get_role_manager, put_admin"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $prix;
 
     /**
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false) 
-     * @Groups({"get_role_adherent,"put_manager"})
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $genre;
 
     /**
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false) 
-     * @Groups({"get_role_adherent,"put_manager"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $editeur;
 
     /**
      * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"get_role_adherent,"put_manager"})
+     * @Groups({"get_role_adherent","put_manager"})
      */
     private $auteur;
 
@@ -168,6 +168,11 @@ class Livre
      * @Groups({"get_role_manager"})
      */
     private $prets;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $dispo;
 
     public function __construct()
     {
@@ -301,6 +306,18 @@ class Livre
                 $pret->setLivre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDispo(): ?bool
+    {
+        return $this->dispo;
+    }
+
+    public function setDispo(?bool $dispo): self
+    {
+        $this->dispo = $dispo;
 
         return $this;
     }

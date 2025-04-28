@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdherentRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -51,7 +52,7 @@ class Adherent implements UserInterface
     private $codeCommune;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      */
     private $mail;
 
@@ -61,7 +62,7 @@ class Adherent implements UserInterface
     private $tel;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", nullable=false)
      */
     private $password;
 
@@ -73,6 +74,7 @@ class Adherent implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="adherent")
+     * @ApiSubresource
      */
     private $prets;
 
